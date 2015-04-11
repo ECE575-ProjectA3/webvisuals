@@ -17,15 +17,7 @@
 	<div id="map"></div>
 	<script src="mapDisplay.js"></script>
 	<script>
-		var localFile = true;
-		if(localFile) {
-			//Fetch json from the local domain (port 80)
-			var requestURL = 'http://ece575a3.ddns.net/testFile';
-		}
-		else {
-			//Fetch json from the data server (port 8080)
-			var requestURL = 'http://ece575a3.ddns.net:8080/testRequest';
-		}
+		var requestURL = 'http://ece575a3.ddns.net/myCarrier';
 		fetchData(requestURL);
 	</script>
 </body>

@@ -21,15 +21,15 @@ function fetchData(url) {
 }
 
 // Add a marker with the given properties
-function addMarker(latitude, longitude, signal, time) {
+function addMarker(latitude, longitude, signal, date, time) {
   // Choose marker based on signal quality
   var icon = (signal >= minSignalGood)   ? markerIconGood
            : (signal >= minSignalMedium) ? markerIconMedium
            : (signal >= minSignalPoor)   ? markerIconPoor
            : null;
+  
   if(icon) { var visible = true; } else { var visible = false; }
-
-  // Add marker to the map
+  
   map.addMarker({
     title: ''+signal,
     lat: latitude,
@@ -38,16 +38,16 @@ function addMarker(latitude, longitude, signal, time) {
     visible: visible,
     icon: icon,
     infoWindow: {
-      content: 'Signal: '+signal+'<br/>&nbsp&nbspTime: '+time
+      content: 'Signal: '+signal
+        +'<br/>&nbsp&nbspDate: '+date
+        +'<br/>&nbsp&nbspTime: '+time
     }
   });
 }
 
 // Create a map with the given markers
 function createMap(markers) {
-  debug(markers);
-  
-  // Draw map panel
+  //debug(markers);	//debug console output
   map = new GMaps({
     el:   '#map',
     lat:  homeLatitude,
@@ -55,21 +55,22 @@ function createMap(markers) {
     zoom: homeZoom
   });
   
-  // Add markers to the map
   for(var i in markers) {
     addMarker(markers[i]["latitude"],
               markers[i]["longitude"],
-              markers[i]["signalStrengthLevel"],
-              0);
+              markers[i]["signalStrength"],
+              markers[i]["date"],
+              markers[i]["time"]);
   }
 }
 
-// Console debug output
 function debug(data) {
   for(var i in data) {
-    console.log(data[i]["latitude"]+' '+
-                data[i]["longitude"]+' '+
-                data[i]["signalStrengthLevel"]);
+    console.log(data[i]["latitude"]
+           +' '+data[i]["longitude"]
+           +' '+data[i]["signalStrength"]
+           +' '+data[i]["date"]
+           +' '+data[i]["time"]);
   }
-  //console.log(data);
+  console.log(data);
 }
