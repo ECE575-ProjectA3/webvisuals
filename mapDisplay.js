@@ -15,39 +15,60 @@ var markerIconMedium =
 var markerIconPoor   = 
   'https://maps.gstatic.com/mapfiles/ms2/micons/red.png';
 
+//parse input form into parameter string
+function parseInput(form) {
+	var request = 'request?carrier='+form.carrier.value
+		+ '&dataType='+form.type.value;
+	
+	//only include non-empty parameters	
+	if(form.minDate.value != '') {
+		request += '&minDate='+form.minDate.value;
+	}
+	if(form.maxDate.value != '') {
+		request += '&maxDate='+form.maxDate.value;
+	}
+	if(form.minTime.value != '') {
+		request += '&minTime='+form.minTime.value;
+	}
+	if(form.maxTime.value != '') {
+		request += '&maxTime='+form.maxTime.value;
+	}
+	return request;	//return request string
+}
+
 // Fetch marker data from the given url and add it to the map
 function fetchData(url) {
   $.getJSON(url, function(data) { createMap(data); });
 }
 
 // Add a marker with the given properties
-function addMarker(latitude, longitude, signal, date, time) {
+function addMarker(latitude, longitude, value, type, time) {
   // Choose marker based on signal quality
-  var icon = (signal >= minSignalGood)   ? markerIconGood
-           : (signal >= minSignalMedium) ? markerIconMedium
-           : (signal >= minSignalPoor)   ? markerIconPoor
+  var icon = (value >= minSignalGood)   ? markerIconGood
+           : (value >= minSignalMedium) ? markerIconMedium
+           : (value >= minSignalPoor)   ? markerIconPoor
            : null;
-  
   if(icon) { var visible = true; } else { var visible = false; }
-  
+
+  // Add marker to the map
   map.addMarker({
-    title: ''+signal,
+    title: ''+value,
     lat: latitude,
     lng: longitude,
     opacity: opacity,
     visible: visible,
     icon: icon,
     infoWindow: {
-      content: 'Signal: '+signal
-        +'<br/>&nbsp&nbspDate: '+date
-        +'<br/>&nbsp&nbspTime: '+time
+      content: type+': '+value+'<br/>&nbsp&nbspTime: '+time
     }
   });
 }
 
 // Create a map with the given markers
 function createMap(markers) {
-  //debug(markers);	//debug console output
+  //debug(markers);
+  
+  // Draw map panel
   map = new GMaps({
     el:   '#map',
     lat:  homeLatitude,
@@ -55,22 +76,24 @@ function createMap(markers) {
     zoom: homeZoom
   });
   
+  // Add markers to the map
   for(var i in markers) {
     addMarker(markers[i]["latitude"],
               markers[i]["longitude"],
-              markers[i]["signalStrength"],
-              markers[i]["date"],
-              markers[i]["time"]);
+              markers[i]["dataValue"],
+              markers[i]["dataType"],
+              markers[i]["dateTime"]);
   }
 }
 
+// Console debug output
 function debug(data) {
   for(var i in data) {
     console.log(data[i]["latitude"]
            +' '+data[i]["longitude"]
-           +' '+data[i]["signalStrength"]
-           +' '+data[i]["date"]
-           +' '+data[i]["time"]);
+           +' '+data[i]["dataValue"]
+           +' '+data[i]["dataType"]
+           +' '+data[i]["dateTime"]);
   }
   console.log(data);
 }
