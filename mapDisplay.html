@@ -8,8 +8,8 @@
 	<script src="jquery-1.11.2.min.js"></script>
 	<style type="text/css">
 		#map {
-			width:  600px;
-			height: 600px;
+			width:  1200px;
+			height: 800px;
 		}
 	</style>
 </head>
@@ -21,13 +21,13 @@
 		
 		<!-- On click, generate map with the parameters given below -->
 		<input type="button" value="Generate Map" 
-			onclick="fetchData('http://localhost:8080/'+parseInput(this.form))">
+			onclick="fetchData('http://ece575a3.ddns.net:8080/'+parseInput(this.form))">
 		<br><br>
 		
 		<!-- Specify a Network Provider -->
 		Network Provider: 
 		<select name="carrier">
-			<option value="testRequest" selected>Test Value</option>
+			<option value="testRequest" selected>Test Request</option>
 			<option value="ATT">AT&T</option>
 			<option value="Sprint">Sprint</option>
 			<option value="TMobile">T-Mobile</option>
@@ -47,11 +47,11 @@
 		<br>
 		
 		<!-- Specify a date and time range -->
-		Date Range: <input type="text" name="minDate"> 
-					<input type="text" name="maxDate">
+		Date Range: <input type="text" name="minDate">
+			<input type="text" name="maxDate"> (format: 'yyyy-mm-dd')
 		<br>
 		Time Range: <input type="text" name="minTime">
-					<input type="text" name="maxTime">
+			<input type="text" name="maxTime"> (format: 'hh') 
 	</form>
 	<br>
 	<div id="map"></div>

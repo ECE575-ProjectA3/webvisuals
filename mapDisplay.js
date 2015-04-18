@@ -5,9 +5,23 @@ var homeZoom      = 11;
 
 //Marker configuration
 var opacity          = 0.5;
-var minSignalGood    = 24;
-var minSignalMedium  = 16;
-var minSignalPoor    = 8;
+
+//signal strength color ranges
+var minSignalGood    = 3;
+var minSignalMedium  = 2;
+var minSignalPoor    = 1;
+
+//download speed color ranges
+var minDownloadGood   = 6;
+var minDownloadMedium = 2;
+var minDownloadPoor   = 0;
+
+//upload speed color ranges
+var minUploadGood   = 3;
+var minUploadMedium = 1;
+var minUploadPoor   = 0;
+
+//icons for marker display
 var markerIconGood   = 
   'https://maps.gstatic.com/mapfiles/ms2/micons/green.png';
 var markerIconMedium = 
@@ -18,7 +32,7 @@ var markerIconPoor   =
 //parse input form into parameter string
 function parseInput(form) {
 	var request = 'request?carrier='+form.carrier.value
-		+ '&dataType='+form.type.value;
+		+ '&type='+form.type.value;
 	
 	//only include non-empty parameters	
 	if(form.minDate.value != '') {
@@ -33,6 +47,7 @@ function parseInput(form) {
 	if(form.maxTime.value != '') {
 		request += '&maxTime='+form.maxTime.value;
 	}
+	//alert(request);
 	return request;	//return request string
 }
 
@@ -44,10 +59,24 @@ function fetchData(url) {
 // Add a marker with the given properties
 function addMarker(latitude, longitude, value, type, time) {
   // Choose marker based on signal quality
-  var icon = (value >= minSignalGood)   ? markerIconGood
-           : (value >= minSignalMedium) ? markerIconMedium
-           : (value >= minSignalPoor)   ? markerIconPoor
-           : null;
+  if(type=="signalStrength") {
+    var icon = (value >= minSignalGood)   ? markerIconGood
+             : (value >= minSignalMedium) ? markerIconMedium
+             : (value >= minSignalPoor)   ? markerIconPoor
+             : null;
+  }
+  if(type=="downloadSpeed") {
+    var icon = (value >= minDownloadGood)   ? markerIconGood
+             : (value >= minDownloadMedium) ? markerIconMedium
+             : (value >= minDownloadPoor)   ? markerIconPoor
+             : null;
+  }
+  if(type=="uploadSpeed") {
+    var icon = (value >= minUploadGood)   ? markerIconGood
+             : (value >= minUploadMedium) ? markerIconMedium
+             : (value >= minUploadPoor)   ? markerIconPoor
+             : null;
+  }
   if(icon) { var visible = true; } else { var visible = false; }
 
   // Add marker to the map
